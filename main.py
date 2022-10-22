@@ -234,31 +234,32 @@ print(brand_info.head(5))
 # getting retweet matrix
 # make a pandas dataframe with column names
 brand_retweet_df = pd.DataFrame(columns=['brand', 'retweet_count'])
-brand_retweets = []
 
 for brand in brands_list:
     retweet_count = df_tweets[df_tweets.user == brand].retweet_count.sum()
     # insert as row to brand_favorites_df
     brand_retweet_df = brand_retweet_df.append({'brand': brand, 'retweet_count': retweet_count}, ignore_index=True)
-    brand_retweets.append([brand, retweet_count])
-    print(brand, retweet_count)
-
-print(brand_retweets)
 
 # getting favorite matrix
 # make a pandas dataframe with column names
 brand_favorites_df = pd.DataFrame(columns=['brand', 'favorite_count'])
-brand_favorites = []
 
 for brand in brands_list:
     favorite_count = df_tweets[df_tweets.user == brand].favorite_count.sum()
     # insert as row to brand_favorites_df
     brand_favorites_df = brand_favorites_df.append({'brand': brand, 'favorite_count': favorite_count}, ignore_index=True)
-    brand_favorites.append([brand, favorite_count])
-    pandas.concat()
-    print(brand, favorite_count)
-
-print(brand_favorites)
 
 print(brand_retweet_df)
 print(brand_favorites_df)
+# add a new column follower count to each dataframe
+brand_retweet_df['follower_ratio'] = 0
+brand_favorites_df['follower_ratio'] = 0
+
+# get follower count from brand_info dataframe
+for brand in brands_list:
+    follower_count = brand_info[brand_info.twitter_acct == brand].num_followers
+    print("brand name for freq list:", brand, follower_count)
+    # brand_retweet_df.loc[brand_retweet_df.brand == brand, 'follower_ratio'] = brand_retweet_df[brand_retweet_df.brand == brand].retweet_count / follower_count
+    # brand_favorites_df.loc[brand_favorites_df.brand == brand, 'follower_ratio'] = brand_favorites_df[brand_favorites_df.brand == brand].favorite_count / follower_count
+
+# print(brand_retweet_df)
