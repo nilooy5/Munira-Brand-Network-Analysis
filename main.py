@@ -9,6 +9,7 @@ Original file is located at
 
 import os
 import numpy as np
+import pandas
 import pandas as pd
 import scipy.stats as stats
 import matplotlib.pyplot as plt
@@ -231,23 +232,33 @@ brand_info = brand_info[brand_info.twitter_acct.isin(brands_list)]
 print(brand_info.head(5))
 
 # getting retweet matrix
+# make a pandas dataframe with column names
+brand_retweet_df = pd.DataFrame(columns=['brand', 'retweet_count'])
 brand_retweets = []
 
 for brand in brands_list:
     retweet_count = df_tweets[df_tweets.user == brand].retweet_count.sum()
+    # insert as row to brand_favorites_df
+    brand_retweet_df = brand_retweet_df.append({'brand': brand, 'retweet_count': retweet_count}, ignore_index=True)
     brand_retweets.append([brand, retweet_count])
     print(brand, retweet_count)
 
 print(brand_retweets)
 
 # getting favorite matrix
+# make a pandas dataframe with column names
+brand_favorites_df = pd.DataFrame(columns=['brand', 'favorite_count'])
 brand_favorites = []
 
 for brand in brands_list:
     favorite_count = df_tweets[df_tweets.user == brand].favorite_count.sum()
+    # insert as row to brand_favorites_df
+    brand_favorites_df = brand_favorites_df.append({'brand': brand, 'favorite_count': favorite_count}, ignore_index=True)
     brand_favorites.append([brand, favorite_count])
+    pandas.concat()
     print(brand, favorite_count)
 
 print(brand_favorites)
 
-
+print(brand_retweet_df)
+print(brand_favorites_df)
