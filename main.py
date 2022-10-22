@@ -194,10 +194,60 @@ for bb in brand_icons:
 
 df_target.head(5)
 
+
+"""# Brand mentions analysis"""
 # read file brand_tweets.csv
 df_tweets = pd.read_csv('brand_tweets.csv', index_col=0, dtype={'id': str})
 print(df_tweets.head(5))
-# print column id_str of df_tweets
-print(df_tweets.id_str.head(5))
-# print column names of df
-print(df.columns)
+
+# print the rows that has @ or # in text
+print(df_tweets[df_tweets.full_text.str.contains('@|#')].head(5))
+df_tweets_w_mentions = df_tweets[df_tweets.full_text.str.contains('@|#')]
+len(df_tweets_w_mentions)
+
+brands_list = set(df_tweets_w_mentions.user)
+brands_list = list(brands_list)
+# get rows from df_tweets_w_mentions that has in_reply_to_screen_name in brands_list
+print('printing brand mentions:')
+# make in_reply_to_screen_name to lower case
+df_tweets_w_mentions.in_reply_to_screen_name = df_tweets_w_mentions.in_reply_to_screen_name.str.lower()
+tweets_brand_mentions = df_tweets_w_mentions[df_tweets_w_mentions.in_reply_to_screen_name.isin(brands_list)]
+print(tweets_brand_mentions.head(20))
+print(len(tweets_brand_mentions))
+# order the rows by retweet_count
+print(tweets_brand_mentions.sort_values(by='retweet_count', ascending=False).head(5))
+# order the rows by favorite_count
+print(tweets_brand_mentions.sort_values(by='favorite_count', ascending=False).head(5))
+
+brand_info = pd.read_csv("brand_info.csv")
+
+# remove rows that has NaN in brand column
+brand_info = brand_info[brand_info.brand.notna()]
+
+# make twitter_acct column to lower case
+brand_info.twitter_acct = brand_info.twitter_acct.str.lower()
+# keep the rows that has twitter_acct in brands_list
+brand_info = brand_info[brand_info.twitter_acct.isin(brands_list)]
+print(brand_info.head(5))
+
+# getting retweet matrix
+brand_retweets = []
+
+for brand in brands_list:
+    retweet_count = df_tweets[df_tweets.user == brand].retweet_count.sum()
+    brand_retweets.append([brand, retweet_count])
+    print(brand, retweet_count)
+
+print(brand_retweets)
+
+# getting favorite matrix
+brand_favorites = []
+
+for brand in brands_list:
+    favorite_count = df_tweets[df_tweets.user == brand].favorite_count.sum()
+    brand_favorites.append([brand, favorite_count])
+    print(brand, favorite_count)
+
+print(brand_favorites)
+
+
