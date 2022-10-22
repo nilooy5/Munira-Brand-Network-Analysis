@@ -39,11 +39,11 @@ df = pd.read_excel('combined_edges_str.xlsx', dtype={'source': str, 'target': st
 brand_list = ['1_@EsteeLauder', '2_@dermalogica', '3_@Neutrogena', '4_@cerave', '5_@SkinCeuticals']
 
 for colname in ['source', 'target']:
-    df.loc[df[colname] == '290081566', colname] = brand_list[0]
-    df.loc[df[colname] == '18148242', colname] = brand_list[1]
-    df.loc[df[colname] == '91259072', colname] = brand_list[2]
-    df.loc[df[colname] == '44693072', colname] = brand_list[3]
-    df.loc[df[colname] == '132543891', colname] = brand_list[4]
+    df.loc[df[colname]=='290081566', colname] = brand_list[0]
+    df.loc[df[colname]=='18148242', colname] = brand_list[1]
+    df.loc[df[colname]=='91259072', colname] = brand_list[2]
+    df.loc[df[colname]=='44693072', colname] = brand_list[3]
+    df.loc[df[colname]=='132543891', colname] = brand_list[4]
 
 df
 
@@ -57,17 +57,15 @@ pd.DataFrame(df.target.value_counts())
 
 """# Following/follower matrix:"""
 
-
 def prep_matrix(df, colname='source', col_rename='following'):
     df_res = pd.DataFrame(df[colname].value_counts()).reset_index()
     df_res.columns = ['id', col_rename]
-    # df_res = df_res.loc[df_res[col_rename] > 1, :]
+    #df_res = df_res.loc[df_res[col_rename] > 1, :]
 
     for b in brand_list:
         df_res[b] = 0
 
     return df_res
-
 
 """### 1. df_source: what brands people are following"""
 
@@ -78,7 +76,7 @@ def prep_matrix(df, colname='source', col_rename='following'):
 #     for j in brand_list:
 #         if j in targets:
 #             df_source.loc[i, j] = 1
-
+            
 # df_source['n_brand_following'] = np.sum(df_source.iloc[:, [2,3,4,5,6]], axis=1)
 
 ## Checking
@@ -121,6 +119,10 @@ The 8 users who follow 4 brands are:
 
 plt.hist(df_source.n_brand_following)
 
+
+
+
+
 """### 2. df_target: what brands are following them"""
 
 # df_target = prep_matrix(df, colname='target', col_rename='follower')
@@ -130,7 +132,7 @@ plt.hist(df_source.n_brand_following)
 #     for j2 in brand_list:
 #         if j2 in sources:
 #             df_target.loc[i2, j2] = 1
-
+            
 # df_target['n_brand_follower'] = np.sum(df_target.iloc[:, [2,3,4,5,6]], axis=1)
 
 ## Checking
@@ -194,10 +196,3 @@ for bb in brand_icons:
 
 df_target.head(5)
 
-# read file brand_tweets.csv
-df_tweets = pd.read_csv('brand_tweets.csv', index_col=0, dtype={'id': str})
-print(df_tweets.head(5))
-# print column id_str of df_tweets
-print(df_tweets.id_str.head(5))
-# print column names of df
-print(df.columns)
